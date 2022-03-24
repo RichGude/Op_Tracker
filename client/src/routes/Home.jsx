@@ -1,16 +1,20 @@
 import React from 'react';
 import Header from '../components/Header';
-import AddRest from '../components/AddRest';
-import RestList from '../components/RestList';
+import Navbar from '../components/Navbar';
+import OperList from '../components/OperList';
+import TrackerTable from '../components/TrackerTable';
 
 const Home = () => {
     return (
         <div>
             <Header />
-            <div className="container">
-                <AddRest />
-                <RestList />
+            <div className="container-fluid">
+                <Navbar />
+                <OperList />
             </div>
+        <div className="container">
+            <TrackerTable />
+        </div>
         </div>
     );
 };

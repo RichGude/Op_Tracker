@@ -8,10 +8,222 @@
     to {opacity: 0; visibility: hidden;}
 }
 
+body {
+    background-color: rgb(255, 255, 255);
+    background-size: cover;
+}
+
+.main {
+    margin-left: 200px;
+}
+
+.operCards {
+    margin: 6px 0 35px 10px;
+}
+
+.sectionHead {
+    margin: 15px 0 5px 5px;
+    padding: 6px 3px;
+    border-bottom: 1px solid rgb(146, 146, 146);
+    border-top: 1px solid rgb(146, 146, 146);
+}
+
+.card {
+    border-radius: 0;
+    width: 22rem;
+    margin: 8px;
+    box-shadow: #000;
+}
+
+.card-final {
+    width: 22rem;
+    margin: 8px;
+}
+
+.card-body {
+    padding: 8px;
+}
+
+.card-body .list-group-item {
+    padding: 6px 12px;
+}
+
+.card-text {
+    margin-bottom: 4px;
+}
+
+.card-header {
+    color: #fff;
+    font-size: 18px;
+    border: 1px solid rgb(0, 0, 0);
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    margin: auto -12px auto -12px;
+    border-radius: 0;
+}
+
+.card-footer {
+    margin: auto -12px auto -12px;
+    color: #fff;
+    height: 50px;
+    background-color: rgb(34, 34, 34);
+    border-radius: 0;
+}
+
+/* Classes that change the background color  */
+.AAA {
+    background-color: rgba(0, 162, 255, 0.65);
+}
+.BBB {
+    background-color: orange;
+}
+.CCC {
+    background-color: yellowgreen;
+}
+.DDD {
+    background-color: rgb(130, 0, 223, 0.65);
+}
+.EEE {
+    background-color: rgb(214, 0, 0, 0.65);
+}
+.FFF {
+    background-color: rgba(0, 0, 128, 0.65);
+}
+.GGG {
+    background-color: rgba(238, 130, 238, 0.65);
+}
+.HHH {
+    background-color: rgba(220, 20, 60, 0.65);
+}
+
+.calen {
+    height: 40px;
+}
+
+.add-symbol {
+    margin: 36px;
+    border: thick solid #000;
+    cursor: pointer;
+}
+
+.descr {
+    color: #5bc0de;
+    font-size: 9pt;
+    margin-top: -3px;
+}
+
+.required {
+    border-color: #5bc0de;
+}
+
+.transparent {
+    visibility: hidden;
+}
+
+.share {
+    position: relative;
+    top: 6px;
+}
+
+.custom-select {
+    width: 100%
+}
+
+.inline,
+.inline h3 {
+    display: inline;
+}
+
+.popover {
+    justify-content: center;
+    align-content: center;
+}
+
+.login {
+    position: relative;
+    top: -3px;
+    margin-top: 8px;
+    margin-right: 15px;
+    background-color: #d6d6d6;
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
+.login:hover {
+    background-color: #b3b3b3;
+}
+
+.tech-h1 {
+    display: inline-flex;
+}
+
+.techops input {
+    display: inline-block;
+    width: 300px;
+    margin-left: 20px;
+    /* padding-bottom: 20px; */
+}
+
+.center {
+    justify-content: center;
+}
+
+.search {
+    position: relative;
+    top: -5px;
+    width: 300px;
+    margin-top: -20px;
+    /* margin-bottom: 10px; */
+}
+
+.pop-search {
+    position: relative;
+    top: -5px;
+    width: 100%;
+    padding: 2px 0px;
+    /* margin-bottom: 8px; */
+    justify-content: center;
+    /* margin-bottom: 10px; */
+}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-image: linear-gradient(rgb(17, 17, 17), rgb(17, 17, 17, 0) 50%), url('../images/side.jpg');
+    background-size: cover;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 80px;
+    border-right: 2px solid #111;
+}
+
+.sidenav a {
+    padding: 6px 6px 6px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    color: #c7c7c7;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #ffffff;
+    animation-duration: 0.5s;
+}
+
 .backFadeIn {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(31, 25, 25, 0.8);
     position: fixed;
     bottom: 0;
     right: 0;
@@ -42,7 +254,7 @@
 
 .ModalWrapper {
     width: 800px;
-    height: 500px;
+    height: 550px;
     box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
     background: #fff;
     color: #000;

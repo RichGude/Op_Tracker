@@ -1,19 +1,24 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import Home from './routes/Home';
-import RestDetailPage from './routes/RestDetailPage';
-import { RestContextProvider } from './context/RestContext';
+import OperDetailPage from './routes/OperDetailPage';
+
+import { OperContextProvider } from './context/OperContext';
+import { AuthoContextProvider } from './context/AuthContext';
 
 const App = () => {
     return (
-        <RestContextProvider>
+        <AuthoContextProvider>
+        <OperContextProvider>
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/restaurants/:id" element={<RestDetailPage />} />
+                <Route path="/operations/:id" element={<OperDetailPage />} />
             </Routes>
         </Router>
-        </RestContextProvider>
+        </OperContextProvider>
+        </AuthoContextProvider>
     )
 }
 

@@ -1,0 +1,62 @@
+The OP Tracker will utilize a single database:
+
+Certain features will not be limited within the database for ease, but will be limited in the GUI (which can be changed and redeployed much easier); these features, and their limits, are:
+TEAM_ID: This will be a small VARCHAR, but should have drop-down menu to select features.
+        This feature is for sorting and filtering purposes - more teams, or new team names may be added later.
+PROGESS: This will be an integer feature shows the relative progress of an operation.
+        This feature may want to be expanded beyond 1, 2, and 3 for more progress fidelity later
+
+
+CREATE TABLE operations  (
+    id          BIGSERIAL       NOT NULL        PRIMARY KEY,
+    requirement VARCHAR(50)     NOT NULL,
+    team        VARCHAR(30)     NOT NULL,
+    team_id     VARCHAR(5)      NOT NULL,
+    obj_opn     VARCHAR(50)     NOT NULL,
+    capability  VARCHAR(50)     NOT NULL,
+    progress    INT             NOT NULL,
+    status      VARCHAR(50)     NOT NULL,
+    document    VARCHAR(50),
+    category    INT             NOT NULL,
+    completed   DATE,
+    bullet1     VARCHAR(50),
+    bullet2     VARCHAR(50),
+    bullet3     VARCHAR(50),
+    bullet4     VARCHAR(50),
+    bullet5     VARCHAR(50)
+);
+
+Build dummy data:
+INSERT INTO operations (requirement, team, team_id, obj_opn, capability, progress, status, document, category, completed, bullet1, bullet2, bullet3, bullet4, bullet5)
+				VALUES ('Requirement Stuff', 'Sooners', 'SOON', 'Winning', 'New quarterback', 2, 'recruiting', 'document_name.txt', 1, '2022-1-30', 'Some', 'stuff', 'to', 'show', 'off');
+
+## Data Tracker Table ##
+CREATE TABLE tracker  (
+    id          BIGSERIAL       NOT NULL        PRIMARY KEY,
+    "AAA"       VARCHAR(20),
+    "BBB"       INT,
+    "CCC"       INT,
+    "DDD"       INT,
+    "EEE"       INT,
+    "FFF"       INT,
+    "GGG"       INT,
+    "HHH"       INT,
+    "III"       INT,
+    "JJJ"       INT,
+    "KKK"       INT,
+    "LLL"       INT,
+    "MMM"       INT,
+    "NNN"       INT,
+    "OOO"       INT,
+    "PPP"       INT,
+    "QQQ"       INT,
+    "RRR"       INT,
+    "SSS"       INT,
+    "TTT"       INT,
+    "UUU"       INT
+);
+
+# Populate the tracker with known rows
+INSERT INTO tracker ("AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG", "HHH", "III", "JJJ", "KKK", "LLL", "MMM", "NNN", "OOO", "PPP", "QQQ", "RRR", "SSS", "TTT", "UUU")
+	     VALUES ('NAM', 12,  0,   2,   20,  51,  1,   4,   5,   8,   9,   5,  0,   4,   8,   3,   10,  9,   2,   8,   3);
+

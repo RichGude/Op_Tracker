@@ -23,7 +23,9 @@ CREATE TABLE operations  (
     bullet2     VARCHAR(50),
     bullet3     VARCHAR(50),
     bullet4     VARCHAR(50),
-    bullet5     VARCHAR(50)
+    bullet5     VARCHAR(50),
+    poc         VARCHAR(50),
+    updated     VARCHAR(7)
 );
 
 Build dummy data:

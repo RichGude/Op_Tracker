@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { OperContext } from '../context/OperContext';
 import { AuthoContext } from '../context/AuthContext';
 import ProgressPoints from './ProgressPoints';
@@ -9,6 +9,17 @@ const OperHeader = (props) => {
     // Load Contexts
     const { operations, setOperations } = useContext(OperContext);
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthoContext);
+    const [ headerDate, setHeaderDate ] = useState('');
+
+    // Determine update date of the Section from Category variable
+    // Table entries last updated will appear last in the operations array (since they're stored last), so filter
+    //    the operations array to only category values, and select the 'updated' value from the last operation
+    
+    useEffect(() => {
+        if (operations.length) {
+            setHeaderDate(operations.filter(operation => operation.category === props.category).at(-1).updated);
+        };
+    }, [operations])
 
     // Determine Label of the Section from Category variable
     let headerLabel = '';
@@ -47,7 +58,7 @@ const OperHeader = (props) => {
                 <div id='ongoing_title'><h2>{headerLabel}</h2><h4>{filteredOps.length} Reports</h4></div>
                 <div className="btn-toolbar mb-2 mb-md-0">
                 <button type="button" className="btn btn-outline-secondary calen" id='calen_ongoing'>
-                    <span className="feather-calendar"></span> 10FEB22
+                    <span className="feather-calendar"></span> {headerDate}
                 </button>
                 </div>
             </div>

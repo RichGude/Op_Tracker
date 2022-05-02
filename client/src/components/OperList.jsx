@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { OperContext } from '../context/OperContext';
-import { AuthoContext } from '../context/AuthContext';
 import operFinder from '../apis/operFinder';
 import OperHeader from './OperHeader';
-import Modal from "./Modal";
+import ModalOper from "./ModalOper";
 
 const OperList = (props) => {
     const { operations, setOperations } = useContext(OperContext);
-    const { isLoggedIn, setIsLoggedIn } = useContext(AuthoContext);
 
     // Define a state for showing a pop-up modal when editing individual data
     const [ showModal, setShowModal ] = useState(false);
@@ -48,7 +46,7 @@ const OperList = (props) => {
             <OperHeader category={2} handleDelete={handleDelete} showModal={showModal} setShowModal={setShowModal} setModalAdd={setModalAdd} setOperID={setOperID} />
             <OperHeader category={3} handleDelete={handleDelete} showModal={showModal} setShowModal={setShowModal} setModalAdd={setModalAdd} setOperID={setOperID} />
         </div>
-        <Modal modalAdd={modalAdd} showModal={showModal} setShowModal={setShowModal} operID={operID} />
+        <ModalOper modalAdd={modalAdd} showModal={showModal} setShowModal={setShowModal} operID={operID} />
     </>);
 };
 

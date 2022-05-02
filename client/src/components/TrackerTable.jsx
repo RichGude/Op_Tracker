@@ -1,22 +1,78 @@
 import React, { useEffect, useState, useContext } from 'react';
 import operFinder from '../apis/operFinder';
+import Chart from 'react-apexcharts';
 import { OperContext } from '../context/OperContext';
-import { useTable, useSortBy, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
+import { AuthoContext } from '../context/AuthContext';
+import { useTable, useSortBy, useFilters, } from 'react-table';
+import ModalTrack from './ModalTrack';
 
 const TrackerTable = () => {
 
     // Call upon the commodities state object from with the Table
     // (all server fetching and updating will occurs in this component vice the TrackerChart)
     const { commodities, setCommodities, addCommodities } = useContext(OperContext);
+    const { isLoggedIn, setIsLoggedIn } = useContext(AuthoContext);
 
-    // Define a state for saving the id of the commodity information for updating the database
-    const [ commID, setCommID ] = useState(1)
+    // Define a state for saving the id of the tracker information for updating the database
+    const [ trackID, setTrackID ] = useState(1)
     // Define a state for saving identifying when the Tracker Data is loaded to know when to show data
     const [ isLoaded, setIsLoaded ] = useState(false)
+    // Define a state for showing a pop-up modal when editing tracker data
+    const [ showTrackModal, setShowTrackModal ] = useState(false);
+    // Define a state for setting whether the modal is for adding a new record (true) or updating an old (false)
+    const [ trackModalAdd, setTrackModalAdd ] = useState(true);
 
-    // Fetch commidity data from tracker table in database
+    // Define a state for saving the chart data of the commodity information in the proper form
+    const [ chartData, setChartData ] = useState({
+        // Define a dummy series set before the real data is pulled from the 
+        series: [{
+            name: 'XXX',
+            data: [1]
+          }],
+        options: {
+            chart: {
+                type: 'bar',
+                height: 450,
+                stacked: true,
+                toolbar: {
+                    show: true
+                },
+                zoom: {
+                    enabled: true
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                legend: {
+                    position: 'bottom',
+                    offsetX: -10,
+                    offsetY: 0
+                }
+                }
+            }],
+            plotOptions: {
+                bar: {
+                horizontal: false,
+                borderRadius: 10
+                },
+            },
+            xaxis: {
+                categories: ['XXX'],
+            },
+            legend: {
+                position: 'right',
+                offsetY: 40
+            },
+            fill: {
+                opacity: 1
+            }
+        },
+    });
+
+    // Fetch commidity data from tracker table in database - only do this once on page load
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchTrackerData = async () => {
             try {
                 // The axios get request is added to the baseURL value
                 const response = await operFinder.get("api/v1/tracker/");
@@ -26,8 +82,50 @@ const TrackerTable = () => {
                 console.log(e);
             };
         };
-        fetchData();
+        fetchTrackerData();
+        
     }, []);
+
+    // Update chart data whenever 'commodities' changes after first render
+    useEffect(() => {
+        if (isLoaded) {
+            // Specify Chart data object with 'series' and 'options' parameters
+            let newData = commodities.map((elem) => {
+                // Use destructuring to pull out all just metric data
+                const { id, AAA, ...metricData } = elem;
+                return {
+                    name: AAA,
+                    data: Object.values(metricData)
+                }
+            })
+            // Specify categories titles
+            let cateNames = Object.keys(commodities[0]).slice(2);
+
+            setChartData(
+                {
+                    series: newData,
+                    options: {
+                        ...chartData.options,
+                        xaxis: {
+                            categories: cateNames
+                        }
+                    }
+                }
+            );}
+    }, [commodities, isLoaded])
+
+    // Update Function: Open tracker modal and fill with current commodity data
+    const handleUpdate = (e, id) => {
+        setTrackID(id);
+        setTrackModalAdd(false);
+        setShowTrackModal(!showTrackModal);
+    };
+
+    // Add Function: Open tracker (Table) modal
+    const handleAdd = (e) => {
+        setTrackModalAdd(true);
+        setShowTrackModal(!showTrackModal);
+    };
 
     // Define function for deleting a record from database
     const handleDelete = async (e, id) => {
@@ -42,108 +140,7 @@ const TrackerTable = () => {
         };
     };
 
-    // A function for returning the header column of the table
-    const tableHeader = () => {
-        return (
-            <thead>
-                {Object.keys(commodities[0]).map((header, index) => {
-                    return (
-                        <th key={index}>{header}</th>
-                    );
-                })} 
-            </thead>
-    );};
-
-    // A function for the table rows (interating through each commodity in commodities, and each value in each commodity)
-    const tableBody = () => {
-        // Initialize an empty array to store every row of entries
-        let bodyList = [];
-        commodities.map(commodity => {
-            let feature_list = [];
-            // For each feature in each commodity, add to the feature to list and push to bodyList 
-            Object.keys(commodity).map(feature_key => (
-                feature_list.push(
-                    <td key={(commodity.id.toString()+feature_key)}>
-                        {commodity[feature_key]}
-                    </td>
-                )
-            ));
-            bodyList.push(<tr>{feature_list}</tr>);
-        })
-        
-        return bodyList;
-    };
-
-    // Define a custom function for rendering Tracker Table (necessary for small time before fetch request of data)
-    const renderTable = () => {
-        if (!isLoaded) {
-            return <div>Loading</div>
-        } else {
-            return (
-            <div className="table-responsive">
-            <table className="table table-striped table-sm">
-                {tableHeader()}
-                {tableBody()}
-            </table>
-        </div>
-    )}};
-    
-    // ## Define elements for displaying an interactive table ## //
-    
-    // Define elements for filtering and sorting
-    function GlobalFilter({
-        preGlobalFilteredRows,
-        globalFilter,
-        setGlobalFilter,
-      }) {
-        const count = preGlobalFilteredRows.length
-        const [ value, setValue ] = React.useState(globalFilter)
-        const onChange = useAsyncDebounce(value => {
-            setGlobalFilter(value || undefined)
-        }, 200)
-
-        return (
-            <span>Search:{' '}
-                <input
-                    value={value || ""}
-                    onChange={e => {
-                        setValue(e.target.value);
-                        onChange(e.target.value);
-                    }}
-                    placeholder={`${count} records...`}
-                    style={{
-                        fontSize: '1.1rem',
-                        border: '0',
-                    }}/>
-            </span>
-        )}
-    
-    // Define a default UI for filtering
-    function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
-        const count = preFilteredRows.length
-
-        return (
-            <input
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
-                }}
-                placeholder={`Search ${count} records...`} />
-    );};
-
-    const defaultColumn = React.useMemo(
-        () => ({
-          // Set up default Filter UI
-          Filter: DefaultColumnFilter,
-        }),
-        []
-    )
-    
-    // Define a function that only runs after the data 
-
-    // Define list of objects to coincide with ReactTable Format (dumb that I have to write this all out...)
+    // Define list of objects to coincide with ReactTable Format - Changes to Tracker table (adding a column) must be reflected here
     const columns = React.useMemo(() => [
         {   Header: 'AAA',
             accessor: 'AAA'},
@@ -187,175 +184,92 @@ const TrackerTable = () => {
             accessor: 'TTT'},
         {   Header: 'UUU',
             accessor: 'UUU'}
-    ]);
+    ], []);
     
-    const data = React.useMemo(() => commodities);
+    // Define data in a memo-ized format for displaying in react
+    const data = React.useMemo(() => commodities, [commodities]);
     
+    // define the Table structure with the useTable hook
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-        state,
-        visibleColumns,
-        preGlobalFilteredRows,
-        setGlobalFilter,
+        setFilter
     } = useTable({
-        columns,
-        data,
-        defaultColumn, // Be sure to pass the defaultColumn option
+            columns,
+            data,
         },
         useFilters,
-        useGlobalFilter,
-        useSortBy
-    );
-    const loadedTable = () => {
-        return (
-            <div>
-            <table {...getTableProps()} style={{ border: 'solid 1px black' }}>
-                <thead>
-                {headerGroups.map(headerGroup => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map(column => (
-                        <th
-                            {...column.getHeaderProps(column.getSortByToggleProps())}
-                            style={{
-                                borderBottom: 'solid 3px red',
-                                color: 'black',
-                            }}
-                        >
-                            {column.render('Header')}
-                            <span>
-                            {column.isSorted
-                                ? column.isSortedDesc
-                                    ? '🔽'
-                                    : '🔼'
-                                : ''}
-                        </span>
-                        <div>{column.canFilter ? column.render('Filter') : null}</div>
-                        </th>
-                    ))}
-                    </tr>
-                ))}
-                <tr>
-                <th
-                    colSpan={visibleColumns.length}
-                    style={{
-                    textAlign: 'left',
-                    }}
-                >
-                    <GlobalFilter
-                    preGlobalFilteredRows={preGlobalFilteredRows}
-                    globalFilter={state.globalFilter}
-                    setGlobalFilter={setGlobalFilter}
-                    />
-                </th>
-                </tr>
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                {rows.map(row => {
-                prepareRow(row)
-                return (
-                    <tr {...row.getRowProps()}>
-                        {row.cells.map(cell => {
-                        return (
-                            <td
-                                {...cell.getCellProps()}
-                                style={{
-                                    padding: '10px',
-                                    border: 'solid 1px gray',
-                                }}>
-                                {cell.render('Cell')}
-                            </td>
-                        )
-                        })}
-                    </tr>
-                )
-                })}
-                </tbody>
-            </table>
-            </div>
-        );
-    };
+        useSortBy);
 
-    const userTable = () => {
+    // Define a custom function for rendering Tracker Table (necessary for small time before fetch request of data)
+    const renderTable = () => {
         if (!isLoaded) {
             return <div>Loading</div>
         } else {
             return (
-                <div>
-                <table {...getTableProps()} style={{ border: 'solid 1px black' }}>
+                <table {...getTableProps()}>
                     <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            <th
-                                {...column.getHeaderProps(column.getSortByToggleProps())}
-                                style={{
-                                    borderBottom: 'solid 3px red',
-                                    color: 'black',
-                                }}
-                            >
-                                {column.render('Header')}
-                                <span>
-                                {column.isSorted
-                                    ? column.isSortedDesc
-                                        ? '🔽'
-                                        : '🔼'
-                                    : ''}
-                            </span>
-                            <div>{column.canFilter ? column.render('Filter') : null}</div>
-                            </th>
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    // Add sorting option for each column
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}
+                                    className={
+                                        column.isSorted ?
+                                            column.isSortedDesc ? "sort-desc" : "sort-asc"
+                                        : ""
+                                    }>{column.render("Header")}
+                                    <span>
+                                        {column.isSorted ?
+                                            column.isSortedDesc ? '🔽' : '🔼'
+                                        : ''}
+                                    </span>
+                                    </th>
+                                ))}
+                                {/* Add columns for update and delete buttons if Auth is logged in */}
+                                {isLoggedIn ? (<>
+                                    <th colSpan="1" role="columnheader">Update</th>
+                                    <th colSpan="1" role="columnheader">Delete</th>
+                                    </>) : null}
+                            </tr>
                         ))}
-                        </tr>
-                    ))}
-                    <tr>
-                    <th
-                        colSpan={visibleColumns.length}
-                        style={{
-                        textAlign: 'left',
-                        }}
-                    >
-                        <GlobalFilter
-                        preGlobalFilteredRows={preGlobalFilteredRows}
-                        globalFilter={state.globalFilter}
-                        setGlobalFilter={setGlobalFilter}
-                        />
-                    </th>
-                    </tr>
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                    prepareRow(row)
-                    return (
-                        <tr {...row.getRowProps()}>
-                            {row.cells.map(cell => {
+                        {rows.map((row, i) => {
+                            prepareRow(row);
                             return (
-                                <td
-                                    {...cell.getCellProps()}
-                                    style={{
-                                        padding: '10px',
-                                        border: 'solid 1px gray',
-                                    }}>
-                                    {cell.render('Cell')}
-                                </td>
-                            )
-                            })}
-                        </tr>
-                    )
-                    })}
+                                <tr {...row.getRowProps()}>
+                                {row.cells.map(cell => {
+                                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                                })}
+                                {isLoggedIn ? (<>
+                                    <td role="cell"><button onClick={(e) => handleUpdate(e, row.original.id)} className='btn btn-warning'>Update</button></td>
+                                    <td role="cell"><button onClick={(e) => handleDelete(e, row.original.id)} className='btn btn-danger'>Delete</button></td>
+                                    </>) : null}
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
-                </div>
-            );
-    };};
+            )}
+        };
 
-
-    return (<div className='main'>
-        <h2>Tabular Technical Operations Data</h2>
-        {userTable()}        
-    </div>);
+    return (
+        <div className='main'>
+            <h2>Chart Technical Operations Data</h2>
+            <Chart options={chartData.options} series={chartData.series} type="bar" height="600" />
+            <h2>Tabular Technical Operations Data</h2>
+            {renderTable()}
+            <div className='container-fluid bottom'>
+                {isLoggedIn ? (
+                    <button onClick={(e) => handleAdd(e)} className='trackAdd'>🔽 ADD LINE</button>
+                ) : ''}
+            </div>
+            <ModalTrack trackModalAdd={trackModalAdd} showTrackModal={showTrackModal} setShowTrackModal={setShowTrackModal} trackID={trackID} />
+        </div>);
 };
 
 export default TrackerTable;

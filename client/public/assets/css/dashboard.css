@@ -11,6 +11,7 @@
 body {
     background-color: rgb(255, 255, 255);
     background-size: cover;
+    margin-bottom: 60px;
 }
 
 .main {
@@ -292,3 +293,49 @@ body {
     z-index: 10;
 }
 
+.main h2 {
+    text-align: center;
+}
+
+th, td {
+    border-bottom: 1px solid;
+    text-align: center;
+}
+
+table {
+    width: 80%;
+    overflow-x: auto;
+    /* Center table in div with left and right 'auto' margins */
+    margin: 5px auto;
+}
+
+th {
+    height: 40px;
+    background-color: rgb(255, 164, 27);
+}
+
+tr:nth-child(even) {
+    background-color: rgba(255, 164, 27, 0.5);
+}
+
+tr:hover {
+    background-color: rgb(255, 164, 27);
+}
+
+.bottom {
+    margin: 0 auto;
+    align-items: center;
+}
+
+.trackAdd {
+    margin: 3px auto;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    border: thick solid rgb(255, 164, 27);
+    background-color: rgb(255, 164, 27, 0.5);
+}
+
+.center {
+    margin: 5px auto;
+}

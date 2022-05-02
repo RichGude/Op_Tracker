@@ -12,7 +12,7 @@ const Home = () => {
                 <Navbar />
                 <OperList />
             </div>
-        <div className="container">
+        <div className="container-fluid">
             <TrackerTable />
         </div>
         </div>

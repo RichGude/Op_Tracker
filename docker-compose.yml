@@ -1,0 +1,92 @@
+version: "3"
+
+x-common-variables: &common-variables
+  POSTGRES_USER:     postgres
+  POSTGRES_PASSWORD: standard
+  POSTGRES_DB:       pern
+
+  # DATABASE_URL:      postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${PGHOST}:${PGPORT}/${POSTGRES_DB}
+
+services:
+  # PostgreSQL Database
+  db:
+    # At time of OG compile: v14.2
+    image: postgres:latest
+    # Run the 'setup.sql' file at docker-compose - populates tables in postgres instance
+    volumes:
+      - postgres_data:/var/lib/postgresql/postgres_data/
+      - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    environment:
+      <<: *common-variables
+    ports:
+      - 5432:5432
+    networks:
+      - server_net
+
+  # Express API Backend
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: ./server
+    networks:
+      - server_net
+      - client
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    ports:
+      - 4000:4000
+    environment:
+      <<: *common-variables
+    depends_on:
+      - db
+
+  # React Front-End
+  client:
+    stdin_open: true
+    environment:
+      CHOKIDAR_USEPOLLING: true
+      <<: *common-variables
+    build:
+      dockerfile: Dockerfile
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    networks:
+      - client
+    ports:
+      - 4320:3000
+    depends_on:
+      - db
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - 5050:8080
+    depends_on:
+      - db
+    networks:
+      - server_net
+  # Generate a Database management view
+  # db_manager:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+  #   ports:
+  #     - 5050:80
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - server_net
+
+# Setup a specific network between the server and database images
+networks:
+  server_net:
+    driver: bridge
+  client:
+
+volumes:
+  postgres_data:
+    driver: local

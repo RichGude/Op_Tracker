@@ -66,7 +66,7 @@ app.get("/api/v1/operations/:id", async (req, res) => {
 // Create one operation
 app.post("/api/v1/operations", async (req, res) => {
     try {
-        const str_query = "INSERT INTO operations (requirement, team, team_id, obj_opn, capability, progress, status, document, category, completed, bullet1, bullet2, bullet3, bullet4, bullet5, poc) \
+        const str_query = "INSERT INTO operations (requirement, team, team_id, obj_opn, capability, progress, status, document, category, completed, bullet1, bullet2, bullet3, bullet4, bullet5, poc, updated) \
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *;";
         // Utilize parameterized queries to protect against injection vulnerabilities
         const results = await db.query(str_query, [req.body.requirement, req.body.team, req.body.team_id, req.body.obj_opn, req.body.capability, req.body.progress, req.body.status, 

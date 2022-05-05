@@ -10,8 +10,8 @@ const TrackerTable = () => {
 
     // Call upon the commodities state object from with the Table
     // (all server fetching and updating will occurs in this component vice the TrackerChart)
-    const { commodities, setCommodities, addCommodities } = useContext(OperContext);
-    const { isLoggedIn, setIsLoggedIn } = useContext(AuthoContext);
+    const { commodities, setCommodities } = useContext(OperContext);
+    const { isLoggedIn } = useContext(AuthoContext);
 
     // Define a state for saving the id of the tracker information for updating the database
     const [ trackID, setTrackID ] = useState(1)
@@ -131,7 +131,7 @@ const TrackerTable = () => {
     const handleDelete = async (e, id) => {
         try {
             const response = await operFinder.delete(`api/v1/tracker/${id}`);
-            console.log("Commodity successfully deleted");
+            console.log("Commodity successfully deleted: " + response.status_code);
             setCommodities(commodities.filter(commodity => {
                 return commodity.id !== id;
             }));
@@ -196,7 +196,6 @@ const TrackerTable = () => {
         headerGroups,
         rows,
         prepareRow,
-        setFilter
     } = useTable({
             columns,
             data,
@@ -258,7 +257,7 @@ const TrackerTable = () => {
         };
 
     return (
-        <div className='main'>
+        <div className='main' id='Stats'>
             <h2>Chart Technical Operations Data</h2>
             <Chart options={chartData.options} series={chartData.series} type="bar" height="600" />
             <h2>Tabular Technical Operations Data</h2>

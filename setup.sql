@@ -1,13 +1,6 @@
-The OP Tracker will utilize a single database:
+\c pern 
 
-Certain features will not be limited within the database for ease, but will be limited in the GUI (which can be changed and redeployed much easier); these features, and their limits, are:
-TEAM_ID: This will be a small VARCHAR, but should have drop-down menu to select features.
-        This feature is for sorting and filtering purposes - more teams, or new team names may be added later.
-PROGESS: This will be an integer feature shows the relative progress of an operation.
-        This feature may want to be expanded beyond 1, 2, and 3 for more progress fidelity later
-
-
-CREATE TABLE operations  (
+CREATE TABLE IF NOT EXISTS operations  (
     id          BIGSERIAL       NOT NULL        PRIMARY KEY,
     requirement VARCHAR(50)     NOT NULL,
     team        VARCHAR(30)     NOT NULL,
@@ -25,17 +18,20 @@ CREATE TABLE operations  (
     bullet4     VARCHAR(50),
     bullet5     VARCHAR(50),
     poc         VARCHAR(50),
-    updated     VARCHAR(7)
+    updated     VARCHAR(10)
 );
 
-Build dummy data:
+-- Insert sample data points (one for each header)
 INSERT INTO operations (requirement, team, team_id, obj_opn, capability, progress, status, document, category, completed, bullet1, bullet2, bullet3, bullet4, bullet5, updated)
-				VALUES ('Requirement Stuff', 'Sooners', 'AAA', 'Winning', 'New quarterback', 2, 'recruiting', 'document_name.txt', 1, '2022-1-30', 'Some', 'stuff', 'to', 'show', 'off', '12MAR22');
+				VALUES ('Requirement', 'Sooners', 'AAA', 'Winning', 'New quarterback', 2, 'recruiting', 'document_name.txt', 1, '2022-1-30', 'Some', 'stuff', 'to', 'show', 'off', '12MAR22');
+INSERT INTO operations (requirement, team, team_id, obj_opn, capability, progress, status, document, category, completed, bullet1, bullet2, bullet3, bullet4, bullet5, updated)
+				VALUES ('Requirement', 'Texas', 'BBB', 'Just keep sucking', 'laying an egg', 2, 'staying home from bowl', null, 2, null, 'Some', 'stuff', 'to', null, null, '24MAR22');
+INSERT INTO operations (requirement, team, team_id, obj_opn, capability, progress, status, document, category, completed, bullet1, bullet2, bullet3, bullet4, bullet5, updated)
+				VALUES ('Requirement', 'Nebraska', 'AAA', 'Try harder', 'eventually go to a bowl', 2, 'training', null, 3, null, 'Some', 'stuff', null, null, null, '12JAN22');
 
-## Data Tracker Table ##
-CREATE TABLE tracker  (
-    id          BIGSERIAL       NOT NULL        PRIMARY KEY,
-    "AAA"       VARCHAR(20),
+CREATE TABLE IF NOT EXISTS tracker  (
+    id        BIGSERIAL       NOT NULL        PRIMARY KEY,
+    "AAA"       VARCHAR(40),
     "BBB"       INT,
     "CCC"       INT,
     "DDD"       INT,
@@ -58,9 +54,6 @@ CREATE TABLE tracker  (
     "UUU"       INT
 );
 
-# Populate the tracker with known rows
+-- Insert sample tracker data point
 INSERT INTO tracker ("AAA", "BBB", "CCC", "DDD", "EEE", "FFF", "GGG", "HHH", "III", "JJJ", "KKK", "LLL", "MMM", "NNN", "OOO", "PPP", "QQQ", "RRR", "SSS", "TTT", "UUU")
 	     VALUES ('NAM', 12,  0,   2,   20,  51,  1,   4,   5,   8,   9,   5,  0,   4,   8,   3,   10,  9,   2,   8,   3);
-
-# To view into a database container
-docker exec -it [container ID] psql -U postgres

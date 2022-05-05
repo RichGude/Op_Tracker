@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { OperContext } from '../context/OperContext';
 import operFinder from '../apis/operFinder';
+import FilterButtons from './FilterButtons';
 import OperHeader from './OperHeader';
 import ModalOper from "./ModalOper";
 
@@ -42,6 +43,7 @@ const OperList = (props) => {
 
     return (<>
         <div className='main'>
+            <FilterButtons />
             <OperHeader category={1} handleDelete={handleDelete} showModal={showModal} setShowModal={setShowModal} setModalAdd={setModalAdd} setOperID={setOperID} />
             <OperHeader category={2} handleDelete={handleDelete} showModal={showModal} setShowModal={setShowModal} setModalAdd={setModalAdd} setOperID={setOperID} />
             <OperHeader category={3} handleDelete={handleDelete} showModal={showModal} setShowModal={setShowModal} setModalAdd={setModalAdd} setOperID={setOperID} />

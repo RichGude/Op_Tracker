@@ -70,7 +70,7 @@ body {
     border-radius: 0;
 }
 
-/* Classes that change the background color  */
+/* Classes that change the card header background color  */
 .AAA {
     background-color: rgba(0, 162, 255, 0.65);
 }
@@ -338,4 +338,90 @@ tr:hover {
 
 .center {
     margin: 5px auto;
+}
+
+/* For Filter buttons showing at the top of the page */
+.filter button {
+    margin-top: 12px;
+    margin-right: 2rem;
+    min-width: 5rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    background-color: white;
+    border: 2px solid;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button.filAll  {
+    color: black;
+    border-color: black;
+}
+button.filAll.active {
+    background: black;
+    color: white;
+}
+button.filAAA  {
+    color: rgba(0, 162, 255, 0.65);
+    border-color: rgba(0, 162, 255, 0.65);
+}
+button.filAAA.active {
+    background: rgba(0, 162, 255, 0.65);
+    color: black;
+}
+button.filBBB {
+    color: orange;
+    border-color: orange;
+}
+button.filBBB.active {
+    background: orange;
+    color: black;
+}
+button.filCCC {
+    color: yellowgreen;
+    border-color: yellowgreen;
+}
+button.filCCC.active {
+    background: yellowgreen;
+    color: black;
+}
+button.filDDD {
+    color: rgb(130, 0, 223, 0.65);
+    border-color: rgb(130, 0, 223, 0.65);
+}
+button.filDDD.active {
+    background: rgb(130, 0, 223, 0.65);
+    color: white;
+}
+button.filEEE {
+    color: rgb(214, 0, 0, 0.65);
+    border-color: rgb(214, 0, 0, 0.65);
+}
+button.filEEE.active {
+    background: rgb(214, 0, 0, 0.65);
+    color: white;
+}
+button.filFFF {
+    color: rgba(0, 0, 128, 0.65);
+    border-color: rgba(0, 0, 128, 0.65);
+}
+button.filFFF.active {
+    background: rgba(0, 0, 128, 0.65);
+    color: white;
+}
+button.filGGG {
+    color: rgba(238, 130, 238, 0.65);
+    border-color: rgba(238, 130, 238, 0.65);
+}
+button.filGGG.active {
+    background: rgba(238, 130, 238, 0.65);
+    color: black;
+}
+button.filHHH {
+    color: rgba(220, 20, 60, 0.65);
+    border-color: rgba(220, 20, 60, 0.65);
+}
+button.filHHH.active {
+    background: rgba(220, 20, 60, 0.65);
+    color: white;
 }
